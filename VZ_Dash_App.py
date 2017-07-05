@@ -38,7 +38,6 @@ def initialize_collision_report(df):
     ped_sev["PrimeModeClass"]= "Pedestrian"
     motor_sev["PrimeModeClass"] = "Motor Vehicle"
     severity_counts = pd.concat([motor_sev,bike_sev,ped_sev]).rename(index=str, columns={"index":"SEVERITY"})
-    print(df)
     age_counts = pd.DataFrame({"Count of Minors":[df["VAGE_Minor"].sum()],"Count of 16-65":[df["VAGE_Working"].sum()],
     "Count of Seniors":[df["VAGE_Senior"].sum()]},index=None)
     df["DateTimeStr"]= df["DATE_"].map(str)+" "+ df['TIME_'].map(str)
@@ -208,4 +207,4 @@ for css in external_css:
 #     totalDict = initialize_collision_report(pd.read("data/related_collisions.csv"))
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(threaded=True)
