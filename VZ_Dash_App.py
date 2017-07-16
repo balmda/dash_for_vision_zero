@@ -1,3 +1,24 @@
+# --------------------------------
+# Name: VZ_Dash_App.py
+# Purpose: This script intended to create a quick interactive dashboard based on input TIMS data.
+# Current Owner: David Wasserman
+# Last Modified: 7/16/2017
+# Copyright:   (c) CoAdapt
+# --------------------------------
+# Copyright 2016 David J. Wasserman
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# --------------------------------
 import dash
 from dash.dependencies import Input, Output, State, Event
 import dash_core_components as dcc
@@ -40,7 +61,8 @@ def initialize_collision_report(df):
     severity_counts = pd.concat([motor_sev,bike_sev,ped_sev]).rename(index=str, columns={"index":"SEVERITY"})
     age_counts = pd.DataFrame({"Count of Minors":[df["VAGE_Minor"].sum()],"Count of 16-65":[df["VAGE_Working"].sum()],
     "Count of Seniors":[df["VAGE_Senior"].sum()]},index=None)
-    df["DateTimeStr"]= df["DATE_"].map(str)+" "+ df['TIME_'].map(str)
+    df["TIME_PAD"]= df["TIME_"].apply(lambda  x: str(x).zfill(4))
+    df["DateTimeStr"]= df["DATE_"].map(str)+" "+ df['TIME_PAD'].map(str)
     df["TimeStamp"] = pd.to_datetime(df["DateTimeStr"],format="%Y-%m-%d %H%M",errors='coerce')
     df["Hour"] = df["TimeStamp"].dt.hour.dropna().astype(int)
     time_df = df[["TimeStamp","Hour","CRASHSEV"]].dropna()
@@ -69,7 +91,6 @@ severity_values=[4, 3, 2, 1]
 severity_labels=['Complaint of Pain', 'Visible Injury', 'Severe Injury','Fatality']
 mode_labels = severity_counts["PrimeModeClass"].unique()
 center_point = dict(lon=df["POINT_X"].mean(),lat=df["POINT_Y"].mean())
-
 
 
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
@@ -157,13 +178,13 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                             'data': [
                             {'labels': ["White", "Black", "Hispanic", "Asian","Other"],
                              'values': [race_counts[i] for i in ["F_W_PRACE", "F_B_PRACE","F_H_PRACE","F_A_PRACE","F_O_PRACE"]],
-                             'type': 'pie',"hole":.6, "text":"Ethnicity","textposition":"inside"}
+                             'type': 'pie',"hole":.6, "text":"Ethnicity","hoverinfo":"label+percent+value"}
                             ],
                             'layout': go.Layout(
                                 title="Collision Party By Ethnicity",
+
                                 plot_bgcolor = colors['background'],
                                 paper_bgcolor = colors['background'],
-                                hovermode='closest',
                                 font= {'color': colors['text']}
                                 )
 
@@ -171,25 +192,28 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                         style = {'width': '33%', 'display': 'inline-block', 'padding': '5 0'}),
                         dcc.Graph(
                         id='time-of-day-profile',
-
                         figure={
                             'data': [go.Bar(
-                                x=[datetime.time(hour=h).strftime("%I:%M %p").lstrip("0") for h in range(1,24)],
+                                x=[datetime.time(hour=h).strftime("%I:%M %p").lstrip("0") for h in (list(range(0,24)))],
                                 #lstrip is not ideal, but is platform independent for this list comp.
                                 y=time_df[time_df["CRASHSEV"] == i]["Hour"].value_counts().sort_index(),
                                 marker={'color': colors['severity_bars'][severity_values.index(i)]},
-                                name=severity_labels[severity_values.index(i)]) for i in severity_values]
+                                name=severity_labels[severity_values.index(i)],width=.75) for i in severity_values]
                             ,
                             'layout': go.Layout(
                                 title="Time of Day Collision Profile",
                                 plot_bgcolor = colors['background'],
                                 paper_bgcolor = colors['background'],
                                 barmode='stack',
+                                xaxis=dict(tickangle = 45),
                                 hovermode='closest',
+                                legend = dict(x=0,y=1.0),
+                                bargap=.05,
                                 font= {'color': colors['text']}
+
                                 )
                         },
-                        style = {'width': '99%', 'display': 'inline-block', 'padding': '5 0'})
+                        style = {'width': '99%', 'display': 'inline-block', 'padding': 0})
 
                 ],tabIndex="Dash - Vision Zero")
 

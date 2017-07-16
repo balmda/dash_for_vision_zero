@@ -1,12 +1,10 @@
 # --------------------------------
 # Name: SWITRSProcessor.py
 # Purpose: This script is intended to summarize input parties and victims level SWITRS data (CA) to the collision point
-# file level in order to provide an enhanced collision dataset.
+# file level in order to provide an enhanced collision dataset (CSV).
 # Current Owner: David Wasserman
-# Last Modified: 11/01/2016
+# Last Modified: 7/16/2017
 # Copyright:   (c) CoAdapt
-# ArcGIS Version:   ArcGIS Pro/10.4
-# Python Version:   3.5/2.7
 # --------------------------------
 # Copyright 2016 David J. Wasserman
 #
@@ -110,7 +108,7 @@ def summarize_switrs(output_collision_csv, collisions_csv, victims_csv=None, par
         print("Gathering victim statistics by case id...")
         victims_df["AvgVAGE"] = victims_df["VAGE"]
         victims_df["VAGE_Minor"] = np.where(victims_df["VAGE"] < 16, 1, np.NaN)
-        victims_df["VAGE_Working"]= np.where((victims_df["VAGE"] >16) & (victims_df["VAGE"] <65),1,np.NaN)
+        victims_df["VAGE_Working"]= np.where((victims_df["VAGE"] >=16) & (victims_df["VAGE"] <65),1,np.NaN)
         victims_df["VAGE_Senior"] = np.where(victims_df["VAGE"] >= 65, 1, np.NaN)
         victims_df["MobilLimAge"] = np.where(victims_df["VAGE"] < 16, 1, victims_df["VAGE_Senior"])
         victims_df, victims_sex_stats = unique_stats_agg_prep(victims_df, "VSEX")
