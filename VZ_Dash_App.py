@@ -48,6 +48,7 @@ mapbox_access_token = 'pk.eyJ1IjoiaG9saXN0aWNieW5hdHVyZSIsImEiOiJjaWYwNDVxZjMwMH
 def make_df_list(str_in):
     return str([('"'+i+'"').strip("'") for i in str_in.split(",")]).replace("'","")
 
+
 def initialize_collision_report(df):
     """Sets ups charts data for report and reports it through dictionary. New charts added by adds to dictionary.
     DF assumed to have 'related_collisions.csv' field schema."""
@@ -92,13 +93,23 @@ severity_labels=['Complaint of Pain', 'Visible Injury', 'Severe Injury','Fatalit
 mode_labels = severity_counts["PrimeModeClass"].unique()
 center_point = dict(lon=df["POINT_X"].mean(),lat=df["POINT_Y"].mean())
 
-
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                 html.Div([
                     html.H2("Dash - Vision Zero", style={'font-family': 'Segoe UI','color': colors['text'],'padding': 5}),
+                    # html.Div([
+                    #     dcc.Slider(
+                    #         id='year-slider',
+                    #         min=df['YEAR_'].min(),
+                    #         max=df['YEAR_'].max(),
+                    #         value=df['YEAR_'].max(),
+                    #         step=None,
+                    #         marks={str(year): str(year) for year in df['YEAR_'].unique()}
+                    #     )], style={'font-family': 'Segoe UI', 'color': colors['text'], 'padding': 30}),
                     html.P("Select different collision characteristics to filter data being reported by the dashboard."
                            ,style={'font-family': 'Segoe UI','color': colors['text'],'padding': 5})
                 ]),
+                html.Hr()
+                ,
                 dcc.Graph(
                 id="collision-map",
                 figure={
