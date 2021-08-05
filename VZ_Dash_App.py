@@ -20,10 +20,9 @@
 # limitations under the License.
 # --------------------------------
 import dash
-from dash.dependencies import Input, Output, State, Event
+from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
-import plotly.plotly as py
 from plotly import graph_objs as go
 from plotly.graph_objs import *
 from flask import Flask
@@ -35,7 +34,7 @@ import os
 
 server = Flask('my app')
 
-app = dash.Dash('Vision Zero App', server=server, csrf_protect=False)
+app = dash.Dash('Vision Zero App', server=server)
 
 if 'DYNO' in os.environ:
     app.scripts.append_script({
@@ -43,7 +42,7 @@ if 'DYNO' in os.environ:
     })
 
 
-mapbox_access_token = ""
+mapbox_access_token = "a"
 
 def make_df_list(str_in):
     return str([('"'+i+'"').strip("'") for i in str_in.split(",")]).replace("'","")
