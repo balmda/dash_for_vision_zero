@@ -96,15 +96,6 @@ center_point = dict(lon=df["POINT_X"].mean(),lat=df["POINT_Y"].mean())
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                 html.Div([
                     html.H2("Dash - Vision Zero", style={'font-family': 'Segoe UI','color': colors['text'],'padding': 5}),
-                    # html.Div([
-                    #     dcc.Slider(
-                    #         id='year-slider',
-                    #         min=df['YEAR_'].min(),
-                    #         max=df['YEAR_'].max(),
-                    #         value=df['YEAR_'].max(),
-                    #         step=None,
-                    #         marks={str(year): str(year) for year in df['YEAR_'].unique()}
-                    #     )], style={'font-family': 'Segoe UI', 'color': colors['text'], 'padding': 30}),
                     html.P("Select different collision characteristics to filter data being reported by the dashboard."
                            ,style={'font-family': 'Segoe UI','color': colors['text'],'padding': 5})
                 ]),
@@ -228,18 +219,12 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
 
                 ],tabIndex="Dash - Vision Zero")
 
-               # dcc.Graph(id='map-graph')])
 external_css = ["https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css",
                 "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"]
 
 
 for css in external_css:
     app.css.append_css({"external_url": css})
-
-# @app.server.before_first_request
-# def defineTotalDict():
-#     global totalDict
-#     totalDict = initialize_collision_report(pd.read("data/related_collisions.csv"))
 
 if __name__ == '__main__':
     app.run_server(threaded=True)
