@@ -43,7 +43,7 @@ if 'DYNO' in os.environ:
     })
 
 
-mapbox_access_token = 'pk.eyJ1IjoiaG9saXN0aWNieW5hdHVyZSIsImEiOiJjaWYwNDVxZjMwMHFoc2lsdXl5MW9rNXA4In0.JhBLZIdBZ5i8sse_f9K7Hw'
+mapbox_access_token = ""
 
 def make_df_list(str_in):
     return str([('"'+i+'"').strip("'") for i in str_in.split(",")]).replace("'","")
