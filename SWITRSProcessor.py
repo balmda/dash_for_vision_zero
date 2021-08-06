@@ -71,7 +71,7 @@ def unique_stats_agg_prep(dataframe, column, ignore_na=True, stats_type="sum"):
     value in a selected column being flagged with a 1 if that value appears. Alphanumeric characters are the only ones
      accepted as unique values, only special character strings are filtered. It is intended to create fields for
     an aggregation function. In addition to the returned dataframe this function returns a series of tuples in the form
-    of [(newuniquefield1,(stats_type),...]
+    of [(newuniquefield1,(stats_type),...]. This function is only slightly different from pd.get_dummies()
     params:
     dataframe (pandas dataframe): incoming dataframe where the column with unique values will have fields added to end.
     column (string): column in dataframe that will have its unique values added as fields with 1 when present.
